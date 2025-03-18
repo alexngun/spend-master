@@ -1,28 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
+import { useColorScheme } from '@/components/useColorScheme';
+import { View } from '@/components/Themed'
 import { useNavigation } from '@react-navigation/native';
-
-import AppTopBar from '@/components/ui/AppTopBar';
+import Overviews from '@/components/ui/Overviews';
+import BudgetReport from '@/components/ui/BudgetReport';
+import Colors from '@/constants/Colors';
 
 const HomeLayout = () => {
+
+    const colorScheme = useColorScheme();
     const navigation = useNavigation();
+    const themeColors = Colors[colorScheme ?? 'light'];
 
     return (
-        <View style={styles.container}>
-            <AppTopBar userName='Alex Ngun' splitAmount={42300}/>
+        <View style={[styles.container, {backgroundColor: themeColors.backgroundSheet}]}>
             <ScrollView contentContainerStyle={styles.content}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Expenses</Text>
-                    {/* Add your expenses components here */}
-                </View>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Income</Text>
-                    {/* Add your income components here */}
-                </View>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Bank Accounts</Text>
-                    {/* Add your bank accounts components here */}
-                </View>
+                <Overviews currentBalance={421311} income={4000} expenses={2410}/>
+                <BudgetReport totalBudget={1024} usedAmount={351} />
             </ScrollView>
         </View>
     );
@@ -34,7 +29,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     content: {
-        padding: 16,
+        padding: 14,
+        gap: 20
     },
     section: {
         marginBottom: 24,

@@ -2,54 +2,47 @@ import React from 'react';
 import { StyleSheet, SafeAreaView, Image } from 'react-native';
 import { formatNumber } from '@/utils/formatter';
 import { useColorScheme } from '@/components/useColorScheme';
-
 import Colors from '@/constants/Colors';
+import { textLarge, textMid, textSmall } from '@/constants/Sizes';
 import { Text, View } from '../Themed';
+import Avatar from '../widgets/Avatar';
 
 interface AppTopBarProps {
     userIcon?: string;
     userName: string;
+    email?: string;
+    currency: string;
     splitAmount: number
 }
 
-const getInitials = (name: string) => {
-    const nameParts = name.split(' ');
-    if (nameParts.length === 1) {
-        return nameParts[0].charAt(0).toUpperCase();
-    }
-    return nameParts[0].charAt(0).toUpperCase() + nameParts[1].charAt(0).toUpperCase();
-};
-
-const AppTopBar: React.FC<AppTopBarProps> = ({ userIcon, userName, splitAmount }) => {
+const AppTopBar: React.FC<AppTopBarProps> = ({ userIcon, userName, email, currency, splitAmount }) => {
     /** 
      * Responsible for rendering the user info and the split amount that is currently unresolved
-     * Params: userIcon (optional), username, amount
+     * Params: userIcon (optional), username, email (optional), currency, splitAmount
     */
 
     const colorScheme = useColorScheme();
     const themeColors = Colors[colorScheme ?? 'light'];
 
+    const splitAmountStyle = {
+        color: splitAmount == 0 ? themeColors.gray : splitAmount > 0 ? themeColors.green : themeColors.red,
+        sign: splitAmount == 0 ? "" : splitAmount > 0 ? "+" : "-"
+    }
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: themeColors.backgroundLight }]}>
             <View style={[styles.leftContainer, {backgroundColor: themeColors.backgroundLight}]}>
-                {userIcon ? (
-                    <Image 
-                        source={{ uri: userIcon }} 
-                        style={styles.userIcon} 
-                    />
-                ) : (
-                    <View style={styles.userIconPlaceholder} lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">
-                        <Text style={[styles.userIconText, { color: 'gray' }]}>{getInitials(userName)}</Text>
-                    </View>
-                )}
+                <Avatar uri={userIcon} name={userName}/>
                 <View style={{ backgroundColor: themeColors.backgroundLight }} >
                     <Text style={[styles.userName, { color: themeColors.text }]}>{userName}</Text>
-                    <Text style={[styles.userType, { color: themeColors.text }]}>Self</Text>
+                    <Text style={{ color: themeColors.lightText, fontSize: textSmall }}>{ email || 'Guest'} </Text>
                 </View>
             </View>
             <View style={[styles.rightContainer, { backgroundColor: themeColors.backgroundLight}]}>
-                <Text lightColor="rgba(0,0,0,0.8)" darkColor="rgba(255,255,255,0.8)">Pending</Text>
-                <Text style={styles.balance}>+CAD{formatNumber(splitAmount)}</Text>
+                <Text style={{color: themeColors.lightText, fontSize: textSmall}}>Split Pending</Text>
+                <Text style={[styles.balance, { color: splitAmountStyle.color }]}>
+                    {splitAmountStyle.sign}{currency} {formatNumber(Math.abs(splitAmount))}
+                </Text>
             </View>
         </SafeAreaView>
     );
@@ -62,11 +55,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 110,
         width: "100%",
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
     },
     leftContainer: {
-        margin: 10,
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -85,22 +75,20 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     userName: {
-        fontSize: 16,
+        fontSize: textLarge,
         fontWeight: 'bold',
     },
-    userType: {
-        fontSize: 12,
-    },
     userIconText: {
-        fontSize: 16,
+        fontSize: textLarge,
         fontWeight: 'bold',
     },
     rightContainer: {
+        gap: 2,
         margin: 10,
         alignItems: 'flex-end',
     },
     balance: {
-        fontSize: 16,
+        fontSize: textMid,
         fontWeight: 'bold',
     },
 });

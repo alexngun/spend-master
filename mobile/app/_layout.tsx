@@ -6,7 +6,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import AppTopBar from '@/components/ui/AppTopBar';
 import { useColorScheme } from '@/components/useColorScheme';
+import { topBarUserMock } from '@/mock/user';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,10 +48,24 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+
   const colorScheme = useColorScheme();
+
+  const topBarData = {
+    username: topBarUserMock.name,
+    email: topBarUserMock.email,
+    currency: topBarUserMock.currency,
+    splitAmount: topBarUserMock.split_amount
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AppTopBar 
+        userName={topBarData.username}
+        email={topBarData.email}
+        currency={topBarUserMock.currency} 
+        splitAmount={topBarUserMock.split_amount} 
+      />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
