@@ -16,7 +16,7 @@ const HomeLayout = () => {
     return (
         <View style={[styles.container, {backgroundColor: themeColors.backgroundSheet}]}>
             <ScrollView contentContainerStyle={styles.content}>
-                <Overviews currentBalance={421311} income={4000} expenses={2410}/>
+                <Overviews currentBalance={42131} income={3891} expenses={2410}/>
                 <BudgetReport totalBudget={1024} usedAmount={351} />
             </ScrollView>
         </View>

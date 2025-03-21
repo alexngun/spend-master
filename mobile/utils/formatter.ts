@@ -1,7 +1,12 @@
 export function formatNumber(num: number, round: 'B' | 'M' | 'K' = 'K', digits: number = 2): string {
+
     const format = (n: number, suffix: string) => {
-        return parseFloat(n.toFixed(digits)) + suffix;
+        return addCommas(parseFloat(n.toFixed(digits))) + suffix;
     };
+
+    function addCommas(n: number): string {
+        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     if (num >= 1e9) {
         return format(num / 1e9, 'B');
@@ -10,6 +15,7 @@ export function formatNumber(num: number, round: 'B' | 'M' | 'K' = 'K', digits: 
     } else if (num >= 1e3 && round == 'K') {
         return format(num / 1e3, 'K');
     } else {
-        return parseFloat(num.toFixed(digits)).toString();
+        return addCommas(parseFloat(num.toFixed(digits).toString()));
     }
+
 }
